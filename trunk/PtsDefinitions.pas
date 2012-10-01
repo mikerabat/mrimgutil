@@ -70,9 +70,9 @@ type
   TTriangleDef = Array[0..2] of integer;   // indices of vertices (TPointf2D)
   PTriangleDef = ^TTriangleDef;
   TTriangles = Array of TTriangleDef;      // Triangulation
-  TTriangelNeighbour = TTriangleDef;
-  TVertextToTriangles = Array of Array of integer; // Triangles attached to a vertex
-  TTriNeighbours = Array of TTriangelNeighbour;
+  TTriangleNeighbour = TTriangleDef;
+  TVertexToTriangles = Array of Array of integer; // Triangles attached to a vertex
+  TTriNeighbours = Array of TTriangleNeighbour;
   TTrianglePts = Array[0..2] of TPointf2D;
 
 function PointsToMatrix(const pts : TDynPointf1dArray) : TDoubleMatrix; overload;

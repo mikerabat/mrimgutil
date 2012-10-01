@@ -28,10 +28,10 @@ uses SysUtils, Classes, PtsDefinitions, BaseMathPersistence;
 type
   TBaseTriangulation = class(TBaseMathPersistence)
   private
-    function GetVertextToTriangle: TVertextToTriangles;
+    function GetVertextToTriangle: TVertexToTriangles;
   protected
     fTriangulation : TTriangles;
-    fVertToTriangle : TVertextToTriangles;
+    fVertToTriangle : TVertexToTriangles;
 
     class function ClassIdentifier : String; override;
     procedure DefineProps; override;
@@ -39,7 +39,7 @@ type
     procedure InitVertToTriangle;
   public
     property Triangles : TTriangles read fTriangulation;
-    property VertextToTriangle : TVertextToTriangles read GetVertextToTriangle;
+    property VertextToTriangle : TVertexToTriangles read GetVertextToTriangle;
 
     procedure CreateTriangulation(var pts : TDynPointf2DArray); virtual; abstract;
   end;
@@ -64,7 +64,7 @@ begin
         AddBinaryProperty(cTriangles, fTriangulation[0], Length(fTriangulation)*sizeof(fTriangulation[0]));
 end;
 
-function TBaseTriangulation.GetVertextToTriangle: TVertextToTriangles;
+function TBaseTriangulation.GetVertextToTriangle: TVertexToTriangles;
 begin
      InitVertToTriangle;
 
