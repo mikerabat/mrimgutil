@@ -1,14 +1,19 @@
+// ###################################################################
+// #### This file is part of the mrimageutils project, depends on
+// #### the mathematics library project and is
+// #### offered under the licence agreement described on
+// #### http://www.mrsoft.org/
+// ####
+// #### Copyright:(c) 2012, Michael R. . All rights reserved.
+// ####
+// #### Unless required by applicable law or agreed to in writing, software
+// #### distributed under the License is distributed on an "AS IS" BASIS,
+// #### WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// #### See the License for the specific language governing permissions and
+// #### limitations under the License.
+// ###################################################################
+
 program ImgUtilsTests;
-{
-
-  Delphi DUnit-Testprojekt
-  -------------------------
-  Dieses Projekt enthält das DUnit-Test-Framework und die GUI/Konsolen-Test-Runner.
-  Zum Verwenden des Konsolen-Test-Runners fügen Sie den konditinalen Definitionen  
-  in den Projektoptionen "CONSOLE_TESTRUNNER" hinzu. Ansonsten wird standardmäßig 
-  der GUI-Test-Runner verwendet.
-
-}
 
 {$IFDEF CONSOLE_TESTRUNNER}
 {$APPTYPE CONSOLE}
