@@ -20,6 +20,7 @@ program ImgUtilsTests;
 {$ENDIF}
 
 uses
+  madExcept,
   Forms,
   TestFramework,
   GUITestRunner,
@@ -37,7 +38,10 @@ uses
   LinearTriangulationTransformation in '..\LinearTriangulationTransformation.pas',
   DelaunyMapping in '..\DelaunyMapping.pas',
   ImageMatrixConv in '..\ImageMatrixConv.pas',
-  ThinPlateSplines in '..\ThinPlateSplines.pas';
+  ThinPlateSplines in '..\ThinPlateSplines.pas',
+  ImageFilter in '..\ImageFilter.pas',
+  ImageResize in '..\ImageResize.pas',
+  TestImageFilter in 'TestImageFilter.pas';
 
 {$R *.RES}
 
