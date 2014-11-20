@@ -41,8 +41,8 @@ type
     property OnImgResizeEvent : TOnImgResizeEvent read fImgResize write fImgResize;
     property Recursive : boolean read fRecursive write fRecursive;
 
-    procedure ReadListFromDirectory(const Directory : string; convType : TImageConvType);
-    procedure ReadListFromDirectoryRaw(const Directory : string; convType : TImageConvType);
+    procedure ReadListFromDirectory(const Directory : string; convType : TImageConvType); virtual;
+    procedure ReadListFromDirectoryRaw(const Directory : string; convType : TImageConvType); virtual;
   end;
 
 // #########################################################
@@ -83,13 +83,19 @@ type
 // the images
 type
   TImageLoadEvent = procedure(Sender : TObject; mtx : TDoubleMatrix; actNum, NumImags : integer; const FileName : string) of Object;
+  TImageLoadEventEx = function(Sender : TObject; mtx : TDoubleMatrix; actNum, NumImags : integer; const FileName : string) : boolean of Object;
   TIncrementalImageList = class(TCustomMtxImageList)
   private
     fOnImageLoad : TImageLoadEvent;
+    fOnImageLoadEx : TImageLoadEventEx;
   protected
     procedure OnImageLoad(mtx : TDoubleMatrix; actNum : integer; const FileName : string); override;
   public
     property OnImageStep : TImageLoadEvent read fOnImageLoad write fOnImageLoad;
+    property OnImageStepEx : TImageLoadEventEx read fOnImageLoadEx write fOnImageLoadEx;
+
+    procedure ReadListFromDirectory(const Directory : string; convType : TImageConvType); override;
+    procedure ReadListFromDirectoryRaw(const Directory : string; convType : TImageConvType); override;
   end;
 
 implementation
@@ -403,6 +409,9 @@ end;
 
 { TOneMtxImageList }
 
+type
+  EIteratorHalt = class(Exception);
+
 constructor TOneMtxImageList.Create;
 begin
      inherited Create;
@@ -442,6 +451,41 @@ procedure TIncrementalImageList.OnImageLoad(mtx: TDoubleMatrix;
 begin
      if Assigned(fOnImageLoad) then
         fOnImageLoad(Self, mtx, actNum, NumImages, FileName);
+     if Assigned(fOnImageLoadEx) then
+     begin
+          if not fOnImageLoadEx(Self, mtx, actNum, NumImages, FileName) then
+             raise EIteratorHalt.Create('User canceled file iteration.');
+     end;
+end;
+
+procedure TIncrementalImageList.ReadListFromDirectory(const Directory: string;
+  convType: TImageConvType);
+begin
+     try
+        inherited;
+     except
+           on E : EIteratorHalt do
+           begin
+                // swallow
+           end;
+     else
+         raise;
+     end;
+end;
+
+procedure TIncrementalImageList.ReadListFromDirectoryRaw(
+  const Directory: string; convType: TImageConvType);
+begin
+     try
+        inherited;
+     except
+           on E : EIteratorHalt do
+           begin
+                // swallow
+           end;
+     else
+         raise;
+     end;
 end;
 
 end.

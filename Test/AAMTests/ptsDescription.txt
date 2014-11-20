@@ -1,0 +1,20 @@
+Each face got
+
+20 points
+
+p1: left eyebrow right mark
+p2: left eyebrow left mark
+p3: left ear
+p4: left cheek
+p4: chin
+p5: right cheek
+p6: right ear
+p7: right eyebrow right mark
+p8: right eyebrow left mark
+p9: nose top
+p10: nose left nostril
+p11: nose right nostril
+p12: mouth lips left
+p13: mouth upper lip middle
+p14: mouth right lip
+p15: mouth lower lip middle
