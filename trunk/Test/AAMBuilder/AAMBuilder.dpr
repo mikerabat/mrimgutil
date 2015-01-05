@@ -1,7 +1,6 @@
 program AAMBuilder;
 
 uses
-  madExcept,
   Forms,
   ufrmBuildAAM in 'ufrmBuildAAM.pas' {frmAAMBuilder},
   AAMAppearanceBuilder in '..\..\AAMAppearanceBuilder.pas',

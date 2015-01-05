@@ -20,7 +20,6 @@ program ImgUtilsTests;
 {$ENDIF}
 
 uses
-  madExcept,
   Forms,
   TestFramework,
   GUITestRunner,
