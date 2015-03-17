@@ -3,8 +3,8 @@ the mrmath library. You can download the libarary from
 
 http://www.mrsoft.org/
 
-or if you like a convenient svn download then subscribe to
-http://code.google.com/p/mrmath/
+or if you like a convenient svn download then check out
+https://github.com/mikerabat/mrimgutil
 
 You can add the matrix library to your projects search path for easy 
 integration.
