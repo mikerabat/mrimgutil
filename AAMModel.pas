@@ -82,6 +82,8 @@ type
     procedure OnLoadDoubleArr(const Name : String; const Value : TDoubleDynArray); override;
     function OnLoadObject(const Name : String; obj : TBaseMathPersistence) : boolean; override;
     procedure DefineProps; override;
+    function PropTypeOfName(const Name: string): TPropType; override;
+
     class function ClassIdentifier : String; override;
   public
     procedure SetShapeParams(Qs : TDoubleMatrix; MeanShape : TDoubleMatrix; ownsMatrix : boolean);
@@ -305,6 +307,35 @@ begin
      if Length(fEigVals) > 0 then
         AddDoubleArr(cAAMEigVals, fEigVals);
 end;
+
+function TAAMModel.PropTypeOfName(const Name: string): TPropType;
+begin
+     if CompareText(Name, cAAMNumDim) = 0
+     then
+         Result := ptInteger
+     else if (CompareText(Name, cAAMBrighness) = 0) or (CompareText(Name, cAAMContrast) = 0) or
+             (CompareText(Name, cAAMMaxDx) = 0) or (CompareText(Name, cAAMMaxDy) = 0) or
+             (CompareText(Name, cAAMMaxBrightnessChange) = 0) or (CompareText(Name, cAAMMaxContrastChange) = 0) or
+             (CompareText(Name, cAAMLearnLearnInitScale) = 0) or (CompareText(Name, cAAMLearnScaleDisturb) = 0) or
+             (CompareText(Name, cAAMLearnTextureDisturb) = 0) or (CompareText(Name, cAAMLearnParamStdDev) = 0) or
+             (CompareText(Name, cAAMLearnTextureEnergy) = 0) or (CompareText(Name, cAAMLearnShapeEnergy) = 0) or
+             (CompareText(Name, cAAMLearnCombinedEnergy) = 0) or (CompareText(Name, cAAMEigVals) = 0)
+     then
+         Result := ptDouble
+     else if (CompareText(Name, cAAMQs) = 0) or (CompareText(Name, cAAMQg) = 0) or
+             (CompareText(Name, cAAMQgInv) = 0) or (CompareText(Name, cAAMMeanTexture) = 0) or
+             (CompareText(Name, cAAMMeanTextureShape) = 0) or
+             (CompareText(Name, cAAMWarp) = 0) or (CompareText(Name, cAAMR) = 0) or
+             (CompareText(Name, cAAMMeanShape) = 0)
+     then
+         Result := ptObject
+     else if CompareText(Name, cAAMMask) = 0
+     then
+         Result := ptBinary
+     else
+         Result := inherited PropTypeOfName(Name);
+end;
+
 
 destructor TAAMModel.Destroy;
 begin

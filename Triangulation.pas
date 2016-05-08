@@ -35,6 +35,7 @@ type
 
     class function ClassIdentifier : String; override;
     procedure DefineProps; override;
+    function PropTypeOfName(const Name : string) : TPropType; override;
     procedure OnLoadBinaryProperty(const Name : String; const Value; size : integer); override;
     procedure InitVertToTriangle;
   public
@@ -62,6 +63,15 @@ procedure TBaseTriangulation.DefineProps;
 begin
      if Length(fTriangulation) > 0 then
         AddBinaryProperty(cTriangles, fTriangulation[0], Length(fTriangulation)*sizeof(fTriangulation[0]));
+end;
+
+function TBaseTriangulation.PropTypeOfName(const Name: string): TPropType;
+begin
+     if CompareText(Name, cTriangles) = 0
+     then
+         Result := ptBinary
+     else
+         Result := inherited PropTypeOfName(Name);
 end;
 
 function TBaseTriangulation.GetVertextToTriangle: TVertexToTriangles;

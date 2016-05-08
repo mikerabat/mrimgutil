@@ -37,7 +37,7 @@ type
   protected
     fNumIterations : integer;
     fNumColorPlanes : integer;
-    
+
     function GetContrast : double; virtual; abstract;
     function GetBrightness : double; virtual; abstract;
     function GetMeanTexture : TDoubleMatrix; virtual; abstract;
@@ -56,6 +56,8 @@ type
 
     procedure OnLoadIntProperty(const Name : String; Value : integer); override;
     procedure DefineProps; override;
+    function PropTypeOfName(const Name: string): TPropType; override;
+
   public
     property OnIterationStep : TOnAAMOptimizeIteration read fOnIterationStep write fOnIterationStep;
 
@@ -105,6 +107,16 @@ begin
      AddIntProperty(cAAMTextureWidth, fTextureWidth);
      AddIntProperty(cAAMTextureHeight, fTextureHeight);
      AddIntProperty(cAAMNumColorPlanes, fNumColorPlanes);
+end;
+
+function TCustomAAMModel.PropTypeOfName(const Name: string): TPropType;
+begin
+     if (CompareText(Name, cAAMTextureWidth) = 0) or (CompareText(Name, cAAMTextureHeight) = 0) or
+        (CompareText(Name, cAAMNumColorPlanes) = 0)
+     then
+         Result := ptInteger
+     else
+         Result := inherited PropTypeOfName(Name);
 end;
 
 procedure TCustomAAMModel.OnLoadIntProperty(const Name: String;

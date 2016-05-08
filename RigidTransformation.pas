@@ -34,6 +34,7 @@ type
     property Mapping : TDoubleMatrix read fMapping;
 
     procedure DefineProps; override;
+    function PropTypeOfName(const Name : string) : TPropType; override;
     function OnLoadObject(const Name : String; obj : TBaseMathPersistence) : boolean; override;
   public
     function MapPoints(const pts : TPtsMappingObj) : TPtsMappingObj; override;
@@ -63,10 +64,21 @@ begin
         AddObject(cRigidRegMapping, fMapping);
 end;
 
+function TBaseRigidPtsRegistration.PropTypeOfName(
+  const Name: string): TPropType;
+begin
+     if CompareText(Name, cRigidRegMapping) = 0
+     then
+         Result := ptObject
+     else
+         Result := inherited PropTypeOfName(Name);
+end;
+
+
 destructor TBaseRigidPtsRegistration.Destroy;
 begin
      fMapping.Free;
-     
+
      inherited;
 end;
 

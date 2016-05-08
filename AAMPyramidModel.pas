@@ -35,6 +35,8 @@ type
     function GetModel(index: integer): TCustomAAMModel;
   protected
     procedure DefineProps; override;
+    function PropTypeOfName(const Name: string): TPropType; override;
+
     procedure OnLoadBeginList(const Name : String; count : integer); override;
     function OnLoadObject(Obj : TBaseMathPersistence) : boolean; override;
     procedure OnLoadEndList; override;
@@ -128,6 +130,15 @@ begin
      for i := 0 to fNumLevels - 1 do
          AddObject(fModels[i]);
      EndList;
+end;
+
+function TCustomPyramidAAMModel.PropTypeOfName(const Name: string): TPropType;
+begin
+     if CompareText(Name, cPyramidAAMModels) = 0
+     then
+         Result := ptObject
+     else
+         Result := inherited PropTypeOfName(Name);
 end;
 
 destructor TCustomPyramidAAMModel.Destroy;

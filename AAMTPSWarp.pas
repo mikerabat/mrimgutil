@@ -1,5 +1,5 @@
 // ###################################################################
-// #### This file is part of the mrimageutils project, depends on 
+// #### This file is part of the mrimageutils project, depends on
 // #### the mathematics library project and is
 // #### offered under the licence agreement described on
 // #### http://www.mrsoft.org/
@@ -45,6 +45,8 @@ type
   protected
     class function ClassIdentifier : String; override;
     procedure DefineProps; override;
+    function PropTypeOfName(const Name: string): TPropType; override;
+
     function OnLoadObject(const Name : String; Obj : TBaseMathPersistence) : boolean; override;
     procedure OnLoadBinaryProperty(const Name : String; const Value; size : integer); override;
   public
@@ -204,6 +206,18 @@ begin
         AddObject(cAAMTPSToPts, fToPtsObj);
      if Assigned(fMaskObj) then
         AddObject(cAAMTpsMaskObj, fMaskObj);
+end;
+
+function TAAMTPSWarp.PropTypeOfName(const Name: string): TPropType;
+begin
+     if CompareText(Name, cAAMTPSMask) = 0
+     then
+         Result := ptBinary
+     else if (CompareText(Name, cAAMTPSToPts) = 0) or (CompareText(Name, cAAMTpsMaskObj) = 0)
+     then
+         Result := ptObject
+     else
+         Result := inherited PropTypeOfName(Name);
 end;
 
 destructor TAAMTPSWarp.Destroy;

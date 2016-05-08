@@ -33,6 +33,8 @@ type
     fLinearWarp : TLinearTriangulationMapping;
 
     procedure DefineProps; override;
+    function PropTypeOfName(const Name : string) : TPropType; override; //
+
     function OnLoadObject(const Name : String; obj : TBaseMathPersistence) : boolean; override;
     class function ClassIdentifier : String; override;
   public
@@ -97,6 +99,16 @@ begin
      if Assigned(fLinearWarp) then
         AddObject(cAAMLinWarper, fLinearWarp);
 end;
+
+function TLinearAAMWarper.PropTypeOfName(const Name: string): TPropType;
+begin
+     if CompareText(Name, cAAMLinWarper) = 0
+     then
+         Result := ptObject
+     else
+         Result := inherited PropTypeOfName(Name);
+end;
+
 
 destructor TLinearAAMWarper.Destroy;
 begin

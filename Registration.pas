@@ -35,6 +35,8 @@ type
   protected
     class function ClassIdentifier : String; override;
     procedure DefineProps; override;
+    function PropTypeOfName(const Name : string) : TPropType; override;
+
     function OnLoadObject(const Name : String; Obj : TBaseMathPersistence) : boolean; override;
   public
     property PtsAsMtxRef : TDoubleMatrix read fPts;
@@ -64,8 +66,6 @@ type
 type
   ERegistrationError = class(Exception);
   TBasePtsRegistration = class(TBaseMathPersistence)
-  protected
-    procedure DefineProps; override;
   public
     function MapPoints(const pts : TPtsMappingObj) : TPtsMappingObj; virtual; abstract;
 
@@ -94,11 +94,6 @@ const cPtsMappingObjDescr = 'PtsMappingObj';
 constructor TBasePtsRegistration.Create;
 begin
      inherited;
-end;
-
-procedure TBasePtsRegistration.DefineProps;
-begin
-     // do nothing in the base class
 end;
 
 function TBasePtsRegistration.MapImage(img: TDoubleMatrix): TDoubleMatrix;
@@ -401,6 +396,16 @@ begin
      AddObject(cPtsObj, fPts);
 end;
 
+function TPtsMappingObj.PropTypeOfName(const Name: string): TPropType;
+begin
+     if CompareText(Name, cPtsObj) = 0
+     then
+         Result := ptObject
+     else
+         Result := inherited PropTypeOfName(Name);
+end;
+
+
 destructor TPtsMappingObj.Destroy;
 begin
      fPts.Free;
@@ -491,5 +496,3 @@ initialization
    RegisterMathIO(TPtsMappingObj);
 
 end.
-
-

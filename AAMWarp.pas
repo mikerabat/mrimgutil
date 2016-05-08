@@ -42,6 +42,8 @@ type
     function OnLoadObject(const Name : String; Obj : TBaseMathPersistence) : boolean; override;
 
     procedure DefineProps; override;
+    function PropTypeOfName(const Name: string): TPropType; override;
+
   public
     function MapTexture(FromPts : TDoubleMatrix; img : TDoubleMatrix) : TDoubleMatrix; virtual; abstract;
 
@@ -80,6 +82,19 @@ begin
      AddObject(cWarpToPts, fToPts);
 end;
 
+function TCustomAAMWarper.PropTypeOfName(const Name: string): TPropType;
+begin
+     if (CompareText(Name, cWarpWidth) = 0) or (CompareText(Name, cWarpHeight) = 0) or
+        (CompareText(Name, cWarpNumColorPts) = 0)
+     then
+         Result := ptInteger
+     else if CompareText(Name, cWarpToPts) = 0
+     then
+         Result := ptObject
+     else
+         Result := inherited PropTypeOfName(Name);
+end;
+
 destructor TCustomAAMWarper.Destroy;
 begin
      fToPts.Free;
@@ -113,5 +128,6 @@ begin
      else
          Result := inherited OnLoadObject(Name, Obj);
 end;
+
 
 end.

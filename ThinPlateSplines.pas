@@ -21,7 +21,7 @@ unit ThinPlateSplines;
 
 interface
 
-uses SysUtils, Classes, Matrix, Registration, Types;
+uses SysUtils, Classes, Matrix, Registration, Types, BaseMathPersistence;
 
 // based on - Bookstein: "Principal Warps: Thin-Plate Splines and the Decomposition of Deformations"
 type
@@ -39,6 +39,7 @@ type
   protected
     class function ClassIdentifier : String; override;
     procedure DefineProps; override;
+    function PropTypeOfName(const Name : string) : TPropType; override;
     procedure OnLoadDoubleArr(const Name : String; const Value : TDoubleDynArray); override;
     procedure OnLoadIntProperty(const Name : String; Value : integer); override;
   protected
@@ -56,7 +57,7 @@ type
 
 implementation
 
-uses LinearAlgebraicEquations, PtsDefinitions, MatrixConst, BaseMathPersistence;
+uses LinearAlgebraicEquations, PtsDefinitions, MatrixConst;
 
 { TTPSRegistration }
 
@@ -193,6 +194,21 @@ begin
      if Length(fDimSplines) > 0 then
         AddDoubleArr(cTPSDimSplines, fDimSplines);
 end;
+
+function TTPSRegistration.PropTypeOfName(const Name: string): TPropType;
+begin
+     if (CompareText(Name, cTPSPWidth) = 0) or (CompareText(Name, cTPSPHeight) = 0) or
+        (CompareText(Name, cTPSDimSplinesWidth) = 0) or (CompareText(Name, cTPSDimSplinesHeight) = 0) or
+        (CompareText(Name, cTPSDimSplinesWidth) = 0)
+     then
+         Result := ptInteger
+     else if (CompareText(Name, cTPSP) = 0) or (CompareText(Name, cTPSDimSplines) = 0)
+     then
+         Result := ptDouble
+     else
+         Result := inherited PropTypeOfName(Name);
+end;
+
 
 function TTPSRegistration.MapPoints(const pts: TPtsMappingObj): TPtsMappingObj;
 var mtx : TDoubleMatrix;

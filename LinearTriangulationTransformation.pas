@@ -1,5 +1,5 @@
 // ###################################################################
-// #### This file is part of the mrimageutils project, depends on 
+// #### This file is part of the mrimageutils project, depends on
 // #### the mathematics library project and is
 // #### offered under the licence agreement described on
 // #### http://www.mrsoft.org/
@@ -86,6 +86,8 @@ type
     // persitence functions
     class function ClassIdentifier : String; override;
     procedure DefineProps; override;
+    function PropTypeOfName(const Name : string) : TPropType; override;
+
     function OnLoadObject(const Name : String; Obj : TBaseMathPersistence) : boolean; override;
     procedure OnLoadBinaryProperty(const Name : String; const Value; size : integer); override;
     procedure OnLoadIntProperty(const Name : String; Value : integer); override;
@@ -225,6 +227,24 @@ begin
      if Length(fToPts) > 0 then
         AddBinaryProperty(cMapLinToPts, fToPts[0], Length(fToPts)*sizeof(fToPts[0]));
 end;
+
+function TLinearTriangulationMapping.PropTypeOfName(
+  const Name: string): TPropType;
+begin
+     if (CompareText(Name, cMapLinWidth) = 0) or (CompareText(Name, cMapLinHeight) = 0)
+     then
+         Result := ptInteger
+     else if CompareText(Name, cMapLinTriangulation) = 0
+     then
+         Result := ptObject
+     else if (CompareText(Name, cMapLinPts) = 0) or (CompareText(Name, cMapLinFromPts) = 0) or
+         (CompareText(Name, cMapLinToPts) = 0)
+     then
+         Result := ptBinary
+     else
+         Result := inherited PropTypeOfName(Name);
+end;
+
 
 destructor TLinearTriangulationMapping.Destroy;
 begin
