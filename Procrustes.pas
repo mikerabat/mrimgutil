@@ -173,6 +173,7 @@ begin
         scalePts1.TransposeInPlace;
         H := scalePts1.Mult(scalePts2);
         H.SVD(U, V, S, True);
+        V.TransposeInPlace;
         FreeAndNil(H);
 
         // zero out all very small components:
