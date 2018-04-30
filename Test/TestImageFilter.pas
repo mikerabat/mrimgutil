@@ -24,12 +24,13 @@ type
   TImageFilterTest = class(TBaseTransformationCase)
   published
     procedure TestMeanFilter;
+    procedure TestResize;
   end;
 
 implementation
 
 uses Graphics, Matrix, ImageMatrixConv,
-     jpeg, Math, BinaryReaderWriter, ImageFilter;
+     jpeg, Math, BinaryReaderWriter, ImageFilter, ImageResize;
 
 
 procedure TImageFilterTest.TestMeanFilter;
@@ -52,7 +53,7 @@ begin
 
      QueryPerformanceCounter(stop);
      Status(Format('mean Filt: %.5f', [(stop - start)/freq]));
-     
+
      bmp := TMatrixImageConverter.ConvertImage(destImg, ctGrayScaleNorm);
      bmp.SaveToFile('MeanFilt_1.bmp');
      bmp.Free;
@@ -63,7 +64,7 @@ begin
 
      QueryPerformanceFrequency(freq);
      QueryPerformanceCounter(start);
-     
+
      with TMeanFilter.Create(15) do
      try
         destImg := Filter(fromImg, 3);
@@ -73,7 +74,7 @@ begin
 
      QueryPerformanceCounter(stop);
      Status(Format('mean Filt rgb: %.5f', [(stop - start)/freq]));
-     
+
      bmp := TMatrixImageConverter.ConvertImage(destImg, ctRGB);
      bmp.SaveToFile('MeanFilt_2.bmp');
      bmp.Free;
@@ -81,6 +82,28 @@ begin
      fromImg.Free;
 end;
 
+
+procedure TImageFilterTest.TestResize;
+var fromImg : IMatrix;
+    toImg : IMatrix;
+    bmp : TBitmap;
+begin
+     fromImg := TMatrixImageConverter.ConvertImage('.\01.bmp', ctGrayScale);
+
+     with TBilinearImageResize.Create(1) do
+     try
+        toImg := Resize(fromImg.GetObjRef, 180, 200);
+     finally
+            free;
+     end;
+
+     bmp := TMatrixImageConverter.ConvertImage(toImg.GetObjRef, ctGrayScale);
+     bmp.SaveToFile('resize.bmp');
+
+     bmp.Free;
+
+
+end;
 
 initialization
    // Alle Testfälle beim Test-Runner registrieren
