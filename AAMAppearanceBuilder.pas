@@ -22,7 +22,7 @@ unit AAMAppearanceBuilder;
 interface
 
 uses SysUtils, Classes, AAMShapeBuilder, PtsDefinitions, Matrix, AAMWarp, PCA,
-     ImageMatrixConv, Types, AAMConst;
+     ImageMatrixConv, Types, AAMConst, MatrixConst;
 
 type
   TCustomAAMAppearanceBuilderParams = class(TObject)
@@ -38,7 +38,7 @@ type
     // #########################################################
     // #### Preprocessing function (e.g. apply a high pass filter on the picture)
     PreprocessingStep : TPreprocessingFunc;
-    PCAProgress : TPCAProgress;
+    PCAProgress : TMtxProgress;
 
     // #########################################################
     // #### PCA procedures - Incremental and batch
@@ -117,7 +117,7 @@ type
 
 implementation
 
-uses MatrixImageLists, Math, Graphics, AAMMatrixExt, BinaryReaderWriter, OptimizedFuncs;
+uses MatrixImageLists, Math, Graphics, AAMMatrixExt, BinaryReaderWriter;
 
 { TAAMAppearance }
 

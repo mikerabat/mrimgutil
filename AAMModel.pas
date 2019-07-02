@@ -222,6 +222,7 @@ var mtx : TDoubleMatrix;
     y : integer;
     valX, valY : double;
 begin
+     Result := nil;
      mtx := TDoubleMatrix.Create;
      try
         origWidth := P.Width;

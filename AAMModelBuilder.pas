@@ -22,7 +22,7 @@ unit AAMModelBuilder;
 interface
 
 uses SysUtils, Classes, AAMShapeBuilder, AAMAppearanceBuilder, Matrix, PCA, AAMWarp,
-     Types, BaseAAMModel, AAMModel;
+     Types, BaseAAMModel, AAMModel, MatrixConst;
 
 type
   TLearnParams = class(TObject)
@@ -31,7 +31,7 @@ type
     ScaleDisturbancePercentage : double;
     TextureDisturbancePercentage : double;
     CombinedModelEnergy : double;
-    PcaProgress : TPCAProgress;
+    PcaProgress : TMtxProgress;
     debugPath : string;
 
     constructor Create;
@@ -114,7 +114,7 @@ type
 implementation
 
 uses MatrixImageLists, Procrustes, Registration, LinearAlgebraicEquations, AAMConst,
-     AAMMatrixExt, ImageMatrixConv, graphics, MatrixConst;
+     AAMMatrixExt, ImageMatrixConv, graphics;
 
 { TAAMModelBuilder }
 

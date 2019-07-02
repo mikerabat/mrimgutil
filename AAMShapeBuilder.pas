@@ -21,7 +21,8 @@ unit AAMShapeBuilder;
 
 interface
 
-uses SysUtils, PtsDefinitions, Matrix, PCA, AAMMatrixExt, AAMConst;
+uses SysUtils, PtsDefinitions, Matrix, PCA, AAMMatrixExt, AAMConst,
+     MatrixConst;
 
 // ###############################################
 // #### building of shape models according to
@@ -33,7 +34,7 @@ type
     ModelEnergy : double;
     KeepAlignedShapes : boolean;
     KeepOriginalShapes : boolean;
-    PCAProgress : TPCAProgress;
+    PCAProgress : TMtxProgress;
 
     procedure PCAOnShapes(const Shapes : TDoubleMatrix; var PCA : TMatrixPCA); virtual; abstract;
 

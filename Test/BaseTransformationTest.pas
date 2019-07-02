@@ -32,7 +32,7 @@ type
 
 implementation
 
-uses Math;
+uses SysUtils, Math;
 
 { TestTProcrustes }
 

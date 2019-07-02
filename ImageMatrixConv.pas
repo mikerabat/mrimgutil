@@ -191,7 +191,7 @@ begin
      yOffset := img.Width*img.Height;
 
      if fKeepSize then
-        imgMatrix.ReshapeInPlace(1, img.Width*img.Height*3);
+        imgMatrix.ReshapeInPlace(1, img.Width*img.Height*3, False);
 
      idx := 0;
      if fColumnsFirst then
@@ -235,7 +235,7 @@ begin
      end;
 
      if fKeepSize then
-        imgMatrix.ReshapeInPlace(img.Width, img.Height*3);
+        imgMatrix.ReshapeInPlace(img.Width, img.Height*3, False);
 end;
 
 class function TMatrixImageConverter.ConvertImage(mtx: TDoubleMatrix;
@@ -346,7 +346,7 @@ begin
      divisor := ifthen(normalize, 1/256, 1);
 
      if fKeepSize then
-        imgMatrix.ReshapeInPlace(1, img.Width*img.Height*3);
+        imgMatrix.ReshapeInPlace(1, img.Width*img.Height*3, False);
 
      if fColumnsFirst then
      begin
@@ -398,7 +398,7 @@ begin
      end;
 
      if fKeepSize then
-        imgMatrix.ReshapeInPlace(img.Width, img.Height*3);
+        imgMatrix.ReshapeInPlace(img.Width, img.Height*3, False);
 end;
 
 function TMatrixImageConverter.ImageToMatrix(img: TBitmap): TDoubleMatrix;
@@ -512,7 +512,7 @@ begin
      colorHeight := fWidth*fHeight;
 
      if fKeepSize then
-        mtx.ReshapeInPlace(1, mtx.Width*mtx.Height);
+        mtx.ReshapeInPlace(1, mtx.Width*mtx.Height, False);
 
      idx := 0;
      if fColumnsFirst then
@@ -555,7 +555,7 @@ begin
      end;
 
      if fKeepSize then
-        mtx.ReshapeInPlace(fWidth, fHeight*3);
+        mtx.ReshapeInPlace(fWidth, fHeight*3, False);
 end;
 
 function TMatrixImageConverter.GrayScaleNormMtxToBmp(mtx : TDoubleMatrix) : TBitmap;
@@ -636,7 +636,7 @@ begin
      colorHeight := fWidth*fHeight;
 
      if fKeepSize then
-        mtx.ReshapeInPlace(1, mtx.Width*mtx.Height);
+        mtx.ReshapeInPlace(1, mtx.Width*mtx.Height, False);
 
      idx := 0;
      if fColumnsFirst then
@@ -679,7 +679,7 @@ begin
      end;
 
      if fKeepSize then
-        mtx.ReshapeInPlace(fWidth, fHeight*3);
+        mtx.ReshapeInPlace(fWidth, fHeight*3, False);
 end;
 
 end.

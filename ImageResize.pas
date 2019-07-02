@@ -32,8 +32,6 @@ type
   protected
     property NumColorPlanes : integer read fNumColorPlanes;
 
-    procedure ApplyKernelNColor(var img : TDoubleDynArray; imgWidth, imgHeight : integer; const kernel : Array of double; kernelSize : integer);
-    procedure ApplyKernel1Color(var img : TDoubleDynArray; imgWidth, imgHeight : integer; const kernel : Array of double; kernelSize : integer);
     procedure ApplyKernel(var img : TDoubleDynArray; imgWidth, imgHeight : integer; const kernel : Array of double; kernelSize : integer);
   public
     function Resize(img : TDoubleMatrix; newWidth, newHeight : integer) : TDoubleMatrix; virtual; abstract;
@@ -86,17 +84,6 @@ end;
 
 procedure TCustomImageResize.ApplyKernel(var img: TDoubleDynArray;
   imgWidth, imgHeight : integer; const kernel: array of double; kernelSize : integer);
-begin
-     if NumColorPlanes = 1
-     then
-         ApplyKernel1Color(img, imgWidth, imgHeight, kernel, kernelSize)
-     else
-         ApplyKernelNColor(img, imgWidth, imgHeight, kernel, kernelSize);
-end;
-
-procedure TCustomImageResize.ApplyKernel1Color(var img: TDoubleDynArray;
-  imgWidth, imgHeight: integer; const kernel: array of double;
-  kernelSize: integer);
 var offset : integer;
     y : Integer;
     x : integer;
@@ -104,87 +91,55 @@ var offset : integer;
     res : TDoubleDynArray;
     actIdx : integer;
     kernelIdx : integer;
+    colorIdx: Integer;
+    colOffset : integer;
+    imgx, imgy : integer;
 begin
      SetLength(res, imgWidth*imgHeight*NumColorPlanes);
 
      offset := kernelSize div 2;
-     actIdx := offset*imgWidth*NumColorPlanes;
 
      // todo: optimize this routine...
-     for y := 0 to imgHeight - 1 do
+     for colorIdx := 0 to fNumColorPlanes - 1 do
      begin
-          for x := 0 to imgWidth - 1 do
+          colOffset := colorIdx*imgWidth*imgHeight;
+          actIdx := offset*imgWidth*NumColorPlanes + colOffset;
+
+          for y := 0 to imgHeight - 1 do
           begin
-               kernelIdx := 0;
-
-               for kernelY := 0 to kernelSize - 1 do
+               for x := 0 to imgWidth - 1 do
                begin
-                    for kernelX := 0 to kernelSize - 1 do
+                    kernelIdx := 0;
+
+                    for kernelY := 0 to kernelSize - 1 do
                     begin
-                         res[actIdx] := res[actIdx] +
-                                        kernel[kernelIdx]*img[Abs(kernelY - offset)*imgWidth + Abs(x - offset + kernelX)];
-                         inc(kernelIdx);
-                    end;
-               end;
-
-               inc(actIdx);
-          end;
-     end;
-
-     // return new image:
-     img := res;
-end;
-
-procedure TCustomImageResize.ApplyKernelNColor(var img: TDoubleDynArray;
-  imgWidth, imgHeight: integer; const kernel: array of double;
-  kernelSize: integer);
-var offset : integer;
-    y : Integer;
-    x : integer;
-    kernelX, kernelY : integer;
-    res : TDoubleDynArray;
-    actIdx : integer;
-    kernelIdx : integer;
-    colorIdx : integer;
-    yOffset : integer;
-begin
-     SetLength(res, imgWidth*imgHeight*NumColorPlanes);
-
-     offset := kernelSize div 2;
-     actIdx := offset*imgWidth;
-
-     // todo: optimize this routine...
-     for y := 0 to imgHeight - 1 do
-     begin
-          for x := 0 to imgWidth - 1 do
-          begin
-               kernelIdx := 0;
-
-               for kernelY := 0 to kernelSize - 1 do
-               begin
-                    for kernelX := 0 to kernelSize - 1 do
-                    begin
-                         yOffset := 0;
-                         for colorIdx := 0 to NumColorPlanes - 1 do
+                         for kernelX := 0 to kernelSize - 1 do
                          begin
-                              res[yOffset + actIdx] := res[actIdx + colorIdx] +
-                                                       kernel[kernelIdx]*
-                                                       img[yOffset + Abs(kernelY - offset)*imgWidth +
-                                                           Abs((x - offset + kernelX) + colorIdx)];
-                              inc(yOffset, imgHeight*imgWidth);
-                         end;
-                         inc(kernelIdx);
-                    end;
-               end;
+                              imgX := x - offset + kernelX;
+                              if imgX < 0 then
+                                 imgX := -imgX;
+                              imgY := y - offset + kernelY;
+                              if imgY < 0 then
+                                 imgY := -imgY;
+                              if imgX >= imgWidth then
+                                 imgX := 2*imgWidth - imgX;
+                              if imgY >= imgHeight then
+                                 imgy := 2*imgHeight - imgY;
 
-               inc(actIdx);
+                              res[actIdx] := res[actIdx] +
+                                             kernel[kernelIdx]*img[colOffset + imgx + imgY*imgWidth];
+                              inc(kernelIdx);
+                         end;
+                    end;
+
+                    inc(actIdx);
+               end;
           end;
      end;
 
      // return new image:
      img := res;
 end;
-
 
 constructor TCustomImageResize.Create(NumColorPlanes: integer);
 begin
@@ -235,9 +190,12 @@ var scaleX, scaleY : single;
     factX, factY : single;
     colIdx : integer;
     yOffset, yOffset2 : integer;
+    inc1, inc2 : Integer;
 begin
      scaleX := origWidth/newWidth;
      scaleY := origHeight/newHeight;
+     inc1 := newWidth*newHeight;
+     inc2 := origWidth*origHeight;
 
      for y := 0 to newHeight - 1 do
      begin
@@ -259,8 +217,8 @@ begin
                                                               factx*(1 - facty)*imgVals[yOffset2 + (iX + 1 + iY*origWidth)] +
                                                               facty*(1 - factx)*imgVals[yOffset2 + (iX +(iY + 1)*origWidth)] +
                                                               factx*facty*imgVals[yOffset2 + (iX + 1 + (iY + 1)*origWidth)];
-                         inc(yOffset, newWidth*newHeight);
-                         inc(yOffset2, origWidth*origHeight);
+                         inc(yOffset, inc1);
+                         inc(yOffset2, inc2);
                     end;
                end
                else
@@ -270,8 +228,8 @@ begin
                     for colIdx := 0 to NumColorPlanes - 1 do
                     begin
                          resImg[(x + y*newWidth) + yOffset] := imgVals[(iX + iY*origWidth) + yOffset2];
-                         inc(yOffset, newWidth*newHeight);
-                         inc(yOffset2, origWidth*origHeight);
+                         inc(yOffset, inc1);
+                         inc(yOffset2, inc2);
                     end;
                end;
           end;

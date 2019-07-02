@@ -38,7 +38,7 @@ procedure ZeroMeanUnitLength(texture : TDoubleMatrix; meanOnly : boolean = False
 
 implementation
 
-uses Types, OptimizedFuncs;
+uses Types;
 
 procedure ZeroMeanUnitLength(texture : TDoubleMatrix; meanOnly : boolean = False);
 var actTexture : TDoubleMatrix;
